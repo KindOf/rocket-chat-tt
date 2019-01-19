@@ -68,7 +68,54 @@ export const toolbarSearch = {
 	},
 };
 
+const moods = {
+	happy: { name: 'Happy', emoji: ':grinning:' },
+	frown: { name: 'Sad', emoji: ':slight_frown:' },
+	meh: { name: 'Uncertain', emoji: ':unamused:' },
+	dizzy: { name: 'Confuzed', emoji: ':thinking:' },
+};
+
+const moodsCounter = new ReactiveVar({
+	happy: 0,
+	frown: 0,
+	meh: 0,
+	dizzy: 0,
+});
+
+const moodAction = (mood) => () => {
+	const curr = moodsCounter.get()[mood];
+	moodsCounter.set({ ...moodsCounter.get(), [mood]: curr + 1 });
+};
+
 const toolbarButtons = (user) => [{
+	name: 'Mood',
+	icon: 'smile-regular',
+	action: (e) => {
+		const config = {
+			columns: [{
+				groups: [{
+					title: 'Moods:',
+					items: Object.keys(moods).map((mood) => ({
+						name: moods[mood].name,
+						emoji: moods[mood].emoji,
+						action: moodAction(mood),
+					})),
+				},
+				{
+					title: 'Graphs',
+					items: Object.keys(moods).map((mood) => ({
+						name: `${ moods[mood].name } - ${ moodsCounter.get()[mood] }`,
+					})),
+				}],
+			}],
+			currentTarget: e.currentTarget,
+			offsetVertical: e.currentTarget.clientHeight + 10,
+		};
+
+		popover.open(config);
+	},
+},
+{
 	name: t('Search'),
 	icon: 'magnifier',
 	action: () => {

@@ -6,6 +6,7 @@ import { Template } from 'meteor/templating';
 import { TAPi18n } from 'meteor/tap:i18n';
 import { isRtl, handleError } from 'meteor/rocketchat:utils';
 import { ChatSubscription } from 'meteor/rocketchat:models';
+import { renderEmoji } from 'meteor/rocketchat:emoji';
 import _ from 'underscore';
 import { hide, leave } from './ChannelActions';
 import { modal } from './modal';
@@ -40,6 +41,9 @@ export const popover = {
 Template.popover.helpers({
 	hasAction() {
 		return !!this.action;
+	},
+	getEmoji(emoji) {
+		return renderEmoji(emoji);
 	},
 });
 
